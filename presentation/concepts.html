@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Apification - Learnsqr</title>
+
+		<meta name="description" content="Apification - A Talk about API's with PHP and ZF.">
+		<meta name="author" content="Agustín F. Calderón M.">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="../assets/vendor/reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="../assets/vendor/reveal.js/css/theme/moon.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="../assets/vendor/reveal.js/lib/css/zenburn.css">
+		
+		<link rel="stylesheet" href="../assets/css/style.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = '../assets/vendor/reveal.js/css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+		
+		      
+        
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				
+				<section>
+                    <h1>
+                        <span class="mysql-color">Conceptos Básicos.</span>
+                        <span class="zf-color">REST</span>
+                    </h1>
+                </section>
+<!-- *************** SLIDES BEGIN ********************* -->
+<section data-markdown="slides/concepts/ContentNegotiation.md"></section>
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Qué es Rest?<center>
+
+- Representational state transfer 
+- Una arquitectura
+- Centrado en la transmisibilidad de las representaciones de los recursos
+- Un recurso es cualquier concepto (cosas)
+- Una representación suele ser un documento que captura el estado actual o previsto de un recurso
+- Un cliente realiza peticiones a un servidor cuando quiere pasar a un nuevo estado
+</script>
+</section>
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Fortalezas<center>
+
+- Acoplamiento débil
+- Menos de mecanografía (contraejemplo: SOAP)
+- Énfasis en la legibilidad; utiliza sustantivos y verbos
+- HTTP métodos como verbos: GET, POST, PUT, DELETE, etc.
+- Recursos como sustantivos, y, además, colecciones
+</script>
+</section>
+
+<section>
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Restricciones<center>
+</script>
+</section>
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Cliente / Servidor<center>
+
+- Los clientes no tienen que ver con el almacenamiento, lo que les permite ser portátil.
+- Los servidores no tienen que ver con la interfaz de usuario o el estado del usuario,
+permitiendo la escalabilidad.
+</script>
+</section>
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Sin-estado<center>
+
+- No contexto de cliente almacenada entre las peticiones.
+Esto significa que no hay sesiones!
+</script>
+</section>
+
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Cacheable<center>
+
+
+- Los métodos no idempotentes deben permitir a los clientes a respuestas de caché.
+- Los clientes deben honrar los encabezados HTTP con respecto para el almacenamiento en caché.
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Sistema de capas<center>
+
+
+- El cliente no debe preocuparse si está conectado directamente al servidor, o a un 
+intermediario proxy.
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Interfaz uniforme<center>
+
+
+
+- Identificación de los recursos
+- Manipulación de los recursos a través de representaciones
+- Mensajes de Auto-descriptivo
+- Hipermedia como el motor del estado de la aplicación (HATEOAS)
+</script>
+</section>
+
+</section>
+
+
+<!-- *************** SLIDES break *********************** -->
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Aspectos principales de un RESTful<center>
+
+- URI Base para cada recurso:
+http://status.dev:8080/api/status/matthew
+- Tipo de papel utilizado para las representaciones del recurso
+- métodos HTTP son el conjunto de operaciones permitido
+el recurso
+- La API debe hipertexto impulsado (es decir, proporcionar enlaces
+para transiciones de estado permitidas)
+</script>
+</section>
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Negociación de contenido<center>
+
+
+- analizar correctamente la solicitud
+- Lea la cabecera Content-Type
+- Estado de Levante "415 tipo de medio no compatible" si
+sin apoyo
+- crear correctamente la respuesta
+- Lea el encabezado Accept
+- Establezca la cabecera Content-Type
+</script>
+</section>
+
+
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Hipermedia<center>
+
+- ¿Qué es?
+- ¿Por qué es importante?
+
+</script>
+</section>
+
+
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>¿Qué es la hipermedia?<center>
+
+- Tipo de papel utilizado para una representación
+- Las relaciones de enlace entre representaciones y / o
+estados
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>¿Por qué es hipermedia importante?<center>
+
+- Detectabilidad
+</script>
+</section>
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Hipermedia payloads<center>
+
+- Los enlaces deben ser plenamente cualificado: incluir, esquema,
+servidor, y el puerto si es necesario
+- Se recomienda una relación de auto
+- Con conjuntos paginados, incluir primero, último, siguiente, y
+relaciones prev
+
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>JSON y Hipermedia<center>
+
+JSON no tiene una forma definida de proporcionar
+enlaces hipermedia
+Opciones:
+- "Enlace" de cabecera (enfoque GitHub)
+- Aplicación / colección + json
+- Aplicación / hal + json
+</script>
+</section>
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Encabezado Enlace<center>
+
+```
+Enlace: <url>; rel = "relación" [...]´
+```
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>application / colección + json<center>
+
+Ver http://amundsen.com/media-types/collection/format/
+
+```
+{
+ "Recogida":
+ {
+ "enlaces": [
+ {"Href": "<uri>", "rel": "relación"}
+ ]
+ }
+}
+```
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>application / hal + json<center>
+
+Ver http://tools.ietf.org/html/draft-kelly-json-hal-03
+
+```
+{
+ "_links": {
+ "Relación": {"href": "<uri>"}
+ }
+}
+```
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Informe de errores<center>
+
+
+- HTTP de estado: 4xx, 5xx
+- No existen más datos!
+- Solución
+- Aplicación / api-problema + json
+
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>application / api-problema + json<center>
+
+Ver
+http://tools.ietf.org/html/draft-nottingham-http-problem-02
+
+```
+{
+ "Describedby": "<url>",
+ "Title": "título genérico de error de tipo",
+ "HttpStatus": <código de estado>,
+ "Detalle": "error específico mensaje detallando"
+}
+```
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Documentar su API<center>
+
+
+- ¿Qué operaciones están disponibles para un determinado recurso?
+- ¿Cómo son las representaciones como? ¿Cómo tengo que
+formar mi solicitud? Qué modificadores puede estar disponible?
+
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>OPCIONES<center>
+
+
+- Como mínimo, responder a las solicitudes de opciones, lo que indica
+Métodos HTTP permitidos a través de la cabecera Permitir.
+- incluir Potencialmente información en el cuerpo HTTP.
+- http://zacstewart.com/2012/04/14/http-options-method.html
+- http://vimeo.com/49613738 ("Diversión con
+OPCIONES "por D. Keith Casey en reposo Fest
+2012)
+
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>El uso de un "describedby" Link<center>
+
+- Utilice un encabezado Enlace con una relación de enlace "describedby"
+apuntando a la documentación. 
+
+Ver
+http://www.mnot.net/blog/2012/10/29/NO_OPTIONS
+Enlace: <http://status.dev/api/status/docs.md>; \
+ rel = "describedby"
+
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Error payloads<center>
+
+- Sea consistente
+- Proporcionar detalles
+- Aplicación / api-problema + JSON es un buen estándar
+
+</script>
+</section>
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>API-Problem payloads<center>
+
+- Se requiere describedby. Si correspondiente a HTTP
+estado,
+http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+describir los códigos de estado HTTP es un buen defecto.
+- También se requiere el título; de nuevo, si corresponde a
+Estado HTTP, utilice estableció descripciones de estado.
+- httpStatus no se requiere, pero se recomienda.
+- detalle es tu lugar para proporcionar cualquier adicional
+información.
+
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Donde para generar API-Problem<center>
+
+- Típicamente, dentro del controlador; aquí es donde el
+errores suceden.
+- Es posible que también desee oyentes sobre lo dispatch.error
+puede generar 404 respuestas en este formato.
+
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Review<center>
+
+- RESTO tiene un montón de pequeños detalles para prestar atención a:
+- URI por recurso
+- métodos HTTP que indican las operaciones
+disponible para un recurso
+- Tipos de papel que indican recursos
+representaciones gobiernan cómo analizar una petición
+así como la forma para dar formato a una respuesta
+- Hipermedia vincula la promoción de detectabilidad
+y cambios de estado disponibles
+
+</script>
+</section>
+
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Review 2<center>
+
+- Varias normas emergentes que rodean específicamente
+REST JSON API
+- Colección + JSON
+- Idioma de la aplicación de hipertexto (HAL)
+- API-Problema
+
+</script>
+</section>
+
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Review 3<center>
+
+- ZF2 tiene un montón de características integradas para ayudar a construir RESTful
+aplicaciones
+- AbstractRestfulController
+- Aceptar aplicación cabecera
+- Rich herramientas HTTP en general
+- capa de vista flexible
+
+</script>
+</section>
+
+
+
+
+<!-- *************** SLIDES END *********************** -->
+            
+            
+     
+
+
+
+
+			</div>
+
+		</div>
+
+		<script src="../assets/vendor/reveal.js/lib/js/head.min.js"></script>
+		<script src="../assets/vendor/reveal.js/js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: '../assets/vendor/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: '../assets/vendor/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: '../assets/vendor/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: '../assets/vendor/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: '../assets/vendor/reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: '../assets/vendor/reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
