@@ -55,7 +55,7 @@
                     </h1>
                 </section>
 <!-- *************** SLIDES BEGIN ********************* -->
-<section data-markdown="slides/concepts/ContentNegotiation.md"></section>
+
 
 <section data-markdown style="text-align: left;">
 <script type="text/template">
@@ -82,10 +82,275 @@
 </script>
 </section>
 
+
+<section>
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Richardson Maturity Model<center>
+
+http://martinfowler.com/articles/richardsonMaturityModel.html
+
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Nivel 0: "El pantano de POX."<center>
+
+<img height="238" data-src="../assets/img/level0.png" alt="Down arrow">
+
+- Servicio que utiliza TCP para el transporte, principalmente como una forma de llamada a procedimiento remoto (RPC). 
+- La mayoría de los sistemas utilizarán HTTP POST para todas las interacciones.
+
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Nivel 1: "Recursos."<center>
+
+<img height="238" data-src="../assets/img/level1.png" alt="Down arrow">
+
+- Un servicio son múltiples "recursos", uno por objeto. 
+- Una URL distinta por cada objeto, cada uno tiene su propia identidad en la web 
+- El servicio puede ser todavía RPC en su naturaleza
+- Todavía está utilizando un único método HTTP.
+
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Nivel 2 "Los verbos HTTP."<center>
+
+<img height="238" data-src="../assets/img/level2.png" alt="Down arrow">
+
+- Verbos HTTP con nuestros servicios como estan la especificación HTTP
+- GET es para las operaciones seguras, y debe ser cacheable; 
+- POST se utiliza para la creación y/o actualización
+- DELETE se puede utilizar para eliminar un recurso
+
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Nivel 3 "Controles Hipermedia."<center>
+
+- Basándose en el nivel anterior, nuestras representaciones de recursos ahora también incluyen enlaces
+- Los enlaces indican lo que podemos hacer a continuación. 
+- Se vuelve casi autodescriptiva.
+
+</script>
+</section>
+
+</section>
+
 <section>
 <section data-markdown style="text-align: left;">
 <script type="text/template">
-## <center>Restricciones<center>
+## <center> Hypertext Application Language<center>
+
+</script>
+</section>
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center> Hypertext Application Language<center>
+
+- Describe cómo proporcionar hipermedia en JSON, 
+- Describe la forma de representar recursos incrustados
+- Las dos cosas que más necesitan estructura estandarizada en JSON. 
+</script>
+</section>
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Tipos de medios<center>
+
+- application/ hal+xml
+- application / hal+JSON. 
+- Se pueden usar como Content-Type, ya que describen la representación de la respuesta; 
+- El cliente puede solicitar simplemente application/json, y el formato de respuesta sigue siendo compatible.
+
+</script>
+</section>
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Links<center>
+
+- Todas las representaciones de recursos deben contener enlaces hipermedia
+- Todos los enlaces se proporcionan en un objeto "_links":
+```
+{
+    "_links": {
+        "self": {"href": "http://example.com/api/status/1234"},
+        "conversation": [
+            {"href": "http://example.com/api/status/1237"},
+            {"href": "http://example.com/api/status/1241"}
+        ]
+    }
+}
+```
+</script>
+</section>
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Recursos<center>
+
+- HAL no impone ninguna estructura sobre otros recursos de requerir los enlaces hipermedia
+- Por lo general no incluyen los enlaces hipermedia al hacer una solicitud de servicio web
+- Los enlaces hipermedia se incluyen sólo en las representaciones devueltos por el servicio
+
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Recursos POST<center>
+
+```
+POST /api/status
+Host: example.com
+Accept: application/json
+Content-Type: application/json
+
+{
+    "status": "This is my awesome status update!",
+    "user": "mwop"
+}
+```
+
+</script>
+</section>
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Recursos RESPONSE<center>
+
+```
+201 Created
+Location: http://example.com/api/status/1347
+Content-Type: application/hal+json
+
+{
+    "_links": {
+        "self": {"href": "http://example.com/api/status/1347"}
+    },
+    "id": "1347",
+    "timestamp": "2013-02-11 23:33:47",
+    "status": "This is my awesome status update!",
+    "user": "mwop"
+}
+```
+
+</script>
+</section>
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Recursos embebidos<center>
+
+- Recursos incrustados están representados dentro de un objeto "_embedded" de la representación
+- Contienen sus propios "_links" también. 
+- Cada recurso se asigna a una propiedad de ese objeto
+- Si se devuelven varios objetos del mismo tipo, se le asigna en un array.
+
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Recursos embebidos<center>
+
+```
+{
+    "_links": {
+        "self": {"href": "http://example.com/api/status/1347"}
+    },
+    "id": "1347",
+    "timestamp": "2013-02-11 23:33:47",
+    "status": "This is my awesome status update!",
+    "_embedded": {
+        "user": {
+            "_links": {
+                "self": {"href": "http://example.com/api/user/mwop"}
+            }
+            "id": "mwop",
+            "name": "Matthew Weier O'Phinney",
+            "url": "http://mwop.net"
+        }
+    }
+}
+```
+
+</script>
+</section>
+
+
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Recursos embebidos collection<center>
+
+```
+{
+    "_links": {
+        "self": {"href": "http://example.com/api/status"},
+        "next": {"href": "http://example.com/api/status?page=2"},
+        "last": {"href": "http://example.com/api/status?page=100"}
+    },
+    "count": 2973,
+    "per_page": 30,
+    "page": 1,
+    "_embedded": {
+        "status": [
+            {
+                "_links": {
+                    "self": {"href": "http://example.com/api/status/1347"}
+                },
+                "id": "1347",
+                "timestamp": "2013-02-11 23:33:47",
+                "status": "This is my awesome status update!",
+                "_embedded": {
+                    "user": {
+                        "_links": {
+                            "self": {"href": "http://example.com/api/user/mwop"}
+                        }
+                        "id": "mwop",
+                        "name": "Matthew Weier O'Phinney",
+                        "url": "http://mwop.net"
+                    }
+                }
+            }
+            /* ... */
+        ]
+    }
+}
+```
+
+</script>
+</section>
+
+
+
+
+</section>
+
+
+
+<section>
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Restricciones de RESTful<center>
 </script>
 </section>
 
@@ -93,9 +358,9 @@
 <script type="text/template">
 ## <center>Cliente / Servidor<center>
 
-- Los clientes no tienen que ver con el almacenamiento, lo que les permite ser portátil.
-- Los servidores no tienen que ver con la interfaz de usuario o el estado del usuario,
-permitiendo la escalabilidad.
+- Los clientes no tienen que ver con el _almacenamiento_, lo que les permite ser _portátil_.
+- Los servidores no tienen que ver con la _interfaz_ de usuario o el estado del usuario,
+permitiendo la _escalabilidad_.
 </script>
 </section>
 
@@ -103,8 +368,8 @@ permitiendo la escalabilidad.
 <script type="text/template">
 ## <center>Sin-estado<center>
 
-- No contexto de cliente almacenada entre las peticiones.
-Esto significa que no hay sesiones!
+- No se almacena el contexto del cliente entre las peticiones.
+- Cada petición contiene toda la información necesaria.
 </script>
 </section>
 
@@ -114,9 +379,8 @@ Esto significa que no hay sesiones!
 <script type="text/template">
 ## <center>Cacheable<center>
 
-
-- Los métodos no idempotentes deben permitir a los clientes a respuestas de caché.
-- Los clientes deben honrar los encabezados HTTP con respecto para el almacenamiento en caché.
+- Las respuestas han de definirse como cacheables cuando corresponda. 
+- Los clientes deben respetar los encabezados HTTP con respecto al almacenamiento en caché.
 </script>
 </section>
 
@@ -125,23 +389,44 @@ Esto significa que no hay sesiones!
 <script type="text/template">
 ## <center>Sistema de capas<center>
 
-
 - El cliente no debe preocuparse si está conectado directamente al servidor, o a un 
-intermediario proxy.
+intermediario.
 </script>
 </section>
 
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>Codigo por demanda<center>
+
+- Es opcional. 
+- Los servidores pueden extender o modificar la funcionalidad enviando código (ex. java applets, js, etc).
+</script>
+</section>
 
 <section data-markdown style="text-align: left;">
 <script type="text/template">
 ## <center>Interfaz uniforme<center>
 
+- Simplifica y desacopla la arquitectura.
+- Permite a cada parte evoluciona independientemente.
 
+  - Identificación de los recursos, por ejemplo con la URI. el recurso como tal
+    esta separado de su representacion. 
+  - Manipulación de los recursos a través de representaciones, con datos suficientes
+	para borarlo o modificarlo
+  - Mensajes auto-descriptivos, que tienen suficiente información que describen como procesar el mensaje.
+  - Hipermedia as the engine of application state  (HATEOAS)
+</script>
+</section>
 
-- Identificación de los recursos
-- Manipulación de los recursos a través de representaciones
-- Mensajes de Auto-descriptivo
-- Hipermedia como el motor del estado de la aplicación (HATEOAS)
+<section data-markdown style="text-align: left;">
+<script type="text/template">
+## <center>HATEOAS<center>
+
+- Hipermedia como el motor del estado de la aplicación
+- Los clientes hacen transiciones solo con acciones identificadas por el servidor
+- El cliente no puede asumir que una accion particular esta disponible para un recurso particular
+  excepto para las descritar por el propio servidor en la representación anterior.
 </script>
 </section>
 
@@ -150,17 +435,13 @@ intermediario proxy.
 
 <!-- *************** SLIDES break *********************** -->
 
+<section data-markdown="slides/concepts/ContentNegotiation.md"></section>
+
 <section data-markdown style="text-align: left;">
 <script type="text/template">
 ## <center>Aspectos principales de un RESTful<center>
 
-- URI Base para cada recurso:
-http://status.dev:8080/api/status/matthew
-- Tipo de papel utilizado para las representaciones del recurso
-- métodos HTTP son el conjunto de operaciones permitido
-el recurso
-- La API debe hipertexto impulsado (es decir, proporcionar enlaces
-para transiciones de estado permitidas)
+
 </script>
 </section>
 
@@ -168,48 +449,23 @@ para transiciones de estado permitidas)
 <script type="text/template">
 ## <center>Negociación de contenido<center>
 
+- Analizar correctamente la solicitud
+	- Leer la cabecera Content-Type
+	- Retornar "415 Unsupported media type" si corresponde
 
-- analizar correctamente la solicitud
-- Lea la cabecera Content-Type
-- Estado de Levante "415 tipo de medio no compatible" si
-sin apoyo
-- crear correctamente la respuesta
-- Lea el encabezado Accept
-- Establezca la cabecera Content-Type
+- Crear correctamente la respuesta
+	- Lea el encabezado Accept
+	- Establezca la cabecera Content-Type
 </script>
 </section>
-
-
 
 
 <section data-markdown style="text-align: left;">
 <script type="text/template">
 ## <center>Hipermedia<center>
 
-- ¿Qué es?
-- ¿Por qué es importante?
-
-</script>
-</section>
-
-
-
-
-<section data-markdown style="text-align: left;">
-<script type="text/template">
-## <center>¿Qué es la hipermedia?<center>
-
-- Tipo de papel utilizado para una representación
-- Las relaciones de enlace entre representaciones y / o
-estados
-</script>
-</section>
-
-
-<section data-markdown style="text-align: left;">
-<script type="text/template">
-## <center>¿Por qué es hipermedia importante?<center>
-
+- Media Type utilizado para una representación
+- Las relaciones entre representaciones y estados
 - Detectabilidad
 </script>
 </section>
@@ -218,11 +474,9 @@ estados
 <script type="text/template">
 ## <center>Hipermedia payloads<center>
 
-- Los enlaces deben ser plenamente cualificado: incluir, esquema,
+- Los enlaces deben ser plenamente cualificados: incluir esquema,
 servidor, y el puerto si es necesario
-- Se recomienda una relación de auto
-- Con conjuntos paginados, incluir primero, último, siguiente, y
-relaciones prev
+- Con conjuntos paginados, incluir primero, último, siguiente, y previo
 
 </script>
 </section>
@@ -232,58 +486,21 @@ relaciones prev
 <script type="text/template">
 ## <center>JSON y Hipermedia<center>
 
-JSON no tiene una forma definida de proporcionar
-enlaces hipermedia
-Opciones:
-- "Enlace" de cabecera (enfoque GitHub)
-- Aplicación / colección + json
-- Aplicación / hal + json
+- JSON no tiene una forma definida de proporcionar enlaces hipermedia
+- Opciones:
+	- "Link" header (enfoque GitHub)
+	- Application /collection + json
+	- Application / hal + json
 </script>
 </section>
 
 <section data-markdown style="text-align: left;">
 <script type="text/template">
-## <center>Encabezado Enlace<center>
+## <center>Link Header<center>
 
+- No es estandar aun.
 ```
-Enlace: <url>; rel = "relación" [...]´
-```
-</script>
-</section>
-
-
-<section data-markdown style="text-align: left;">
-<script type="text/template">
-## <center>application / colección + json<center>
-
-Ver http://amundsen.com/media-types/collection/format/
-
-```
-{
- "Recogida":
- {
- "enlaces": [
- {"Href": "<uri>", "rel": "relación"}
- ]
- }
-}
-```
-</script>
-</section>
-
-
-<section data-markdown style="text-align: left;">
-<script type="text/template">
-## <center>application / hal + json<center>
-
-Ver http://tools.ietf.org/html/draft-kelly-json-hal-03
-
-```
-{
- "_links": {
- "Relación": {"href": "<uri>"}
- }
-}
+Link: <url>; rel = "relation" [...]´
 ```
 </script>
 </section>
@@ -293,11 +510,10 @@ Ver http://tools.ietf.org/html/draft-kelly-json-hal-03
 <script type="text/template">
 ## <center>Informe de errores<center>
 
-
 - HTTP de estado: 4xx, 5xx
 - No existen más datos!
 - Solución
-- Aplicación / api-problema + json
+	- Application / api-problem + json
 
 </script>
 </section>
@@ -305,7 +521,7 @@ Ver http://tools.ietf.org/html/draft-kelly-json-hal-03
 
 <section data-markdown style="text-align: left;">
 <script type="text/template">
-## <center>application / api-problema + json<center>
+## <center>Application / api-problem + json<center>
 
 Ver
 http://tools.ietf.org/html/draft-nottingham-http-problem-02
@@ -324,12 +540,13 @@ http://tools.ietf.org/html/draft-nottingham-http-problem-02
 
 <section data-markdown style="text-align: left;">
 <script type="text/template">
-## <center>Documentar su API<center>
+## <center>Documentar la API<center>
 
 
 - ¿Qué operaciones están disponibles para un determinado recurso?
-- ¿Cómo son las representaciones como? ¿Cómo tengo que
-formar mi solicitud? Qué modificadores puede estar disponible?
+- ¿Cómo son las representaciones?
+- ¿Cómo tengo que formar mi solicitud? 
+- ¿Qué modificadores pueden estar disponibles?
 
 </script>
 </section>
@@ -337,16 +554,13 @@ formar mi solicitud? Qué modificadores puede estar disponible?
 
 <section data-markdown style="text-align: left;">
 <script type="text/template">
-## <center>OPCIONES<center>
+## <center>OPTIONS<center>
 
 
-- Como mínimo, responder a las solicitudes de opciones, lo que indica
-Métodos HTTP permitidos a través de la cabecera Permitir.
+- Responder a OPTIONS indicando los métodos HTTP permitidos a través de la cabecera Allow.
 - incluir Potencialmente información en el cuerpo HTTP.
 - http://zacstewart.com/2012/04/14/http-options-method.html
-- http://vimeo.com/49613738 ("Diversión con
-OPCIONES "por D. Keith Casey en reposo Fest
-2012)
+- http://vimeo.com/49613738 ("Fun with OPTIONS "por D. Keith Casey at REST Fest 2012)
 
 </script>
 </section>
@@ -354,16 +568,18 @@ OPCIONES "por D. Keith Casey en reposo Fest
 
 <section data-markdown style="text-align: left;">
 <script type="text/template">
-## <center>El uso de un "describedby" Link<center>
+## <center>El uso de "describedby"<center>
 
-- Utilice un encabezado Enlace con una relación de enlace "describedby"
+- Utilice un encabezado Link con una relación de enlace "describedby"
 apuntando a la documentación. 
 
 Ver
 http://www.mnot.net/blog/2012/10/29/NO_OPTIONS
-Enlace: <http://status.dev/api/status/docs.md>; \
- rel = "describedby"
 
+```
+Link: <http://status.dev/api/status/docs.md>; \
+rel = "describedby"
+```
 </script>
 </section>
 
@@ -372,9 +588,9 @@ Enlace: <http://status.dev/api/status/docs.md>; \
 <script type="text/template">
 ## <center>Error payloads<center>
 
-- Sea consistente
+- Ser consistente
 - Proporcionar detalles
-- Aplicación / api-problema + JSON es un buen estándar
+- Application / api-problem + JSON es un buen estándar
 
 </script>
 </section>
@@ -384,45 +600,30 @@ Enlace: <http://status.dev/api/status/docs.md>; \
 ## <center>API-Problem payloads<center>
 
 - Se requiere describedby. Si correspondiente a HTTP
-estado,
-http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
-describir los códigos de estado HTTP es un buen defecto.
-- También se requiere el título; de nuevo, si corresponde a
-Estado HTTP, utilice estableció descripciones de estado.
+estado. 
+- http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html 
+  describir los códigos de estado HTTP.
+- Title requerido si corresponde a Estado HTTP
 - httpStatus no se requiere, pero se recomienda.
-- detalle es tu lugar para proporcionar cualquier adicional
-información.
+- details proporcionar cualquier información adicional.
 
 </script>
 </section>
 
-
-<section data-markdown style="text-align: left;">
-<script type="text/template">
-## <center>Donde para generar API-Problem<center>
-
-- Típicamente, dentro del controlador; aquí es donde el
-errores suceden.
-- Es posible que también desee oyentes sobre lo dispatch.error
-puede generar 404 respuestas en este formato.
-
-</script>
-</section>
 
 
 <section data-markdown style="text-align: left;">
 <script type="text/template">
 ## <center>Review<center>
 
-- RESTO tiene un montón de pequeños detalles para prestar atención a:
-- URI por recurso
-- métodos HTTP que indican las operaciones
-disponible para un recurso
-- Tipos de papel que indican recursos
-representaciones gobiernan cómo analizar una petición
-así como la forma para dar formato a una respuesta
-- Hipermedia vincula la promoción de detectabilidad
-y cambios de estado disponibles
+- RESTO tiene un montón de pequeños detalles
+	- URI por recurso
+	- Métodos HTTP que indican las operaciones
+		disponible para un recurso
+	- Media Types que indican las representaciones 
+		de los resursos que gobiernan cómo analizar una petición
+		así como la forma para dar formato a una respuesta
+	- Hipermedia vincula la detectabilidad y cambios de estado disponibles
 
 </script>
 </section>
@@ -434,7 +635,7 @@ y cambios de estado disponibles
 ## <center>Review 2<center>
 
 - Varias normas emergentes que rodean específicamente
-REST JSON API
+	REST JSON API
 - Colección + JSON
 - Idioma de la aplicación de hipertexto (HAL)
 - API-Problema
@@ -449,11 +650,11 @@ REST JSON API
 ## <center>Review 3<center>
 
 - ZF2 tiene un montón de características integradas para ayudar a construir RESTful
-aplicaciones
+	aplicaciones
 - AbstractRestfulController
-- Aceptar aplicación cabecera
-- Rich herramientas HTTP en general
-- capa de vista flexible
+- Accept cabecera
+- Rich HTTP en general
+- Capa de vista flexible
 
 </script>
 </section>
